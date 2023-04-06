@@ -1,36 +1,44 @@
-[gd_scene load_steps=5 format=3 uid="uid://4keioumlbs53"]
+[gd_scene load_steps=8 format=3 uid="uid://4keioumlbs53"]
 
 [ext_resource type="Texture2D" uid="uid://ga0frdq4bv41" path="res://circuit.jpg" id="1_o6moa"]
 [ext_resource type="Texture2D" uid="uid://c4cly3esc3xs4" path="res://car.png" id="2_8f3s5"]
+[ext_resource type="Texture2D" uid="uid://d0k1kcml5a8he" path="res://arrow.png" id="2_gayuo"]
+[ext_resource type="Script" path="res://arrowScript.gd" id="3_u7kow"]
+
+[sub_resource type="Curve2D" id="Curve2D_qlo3h"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -80.1795, 107.854, 11.458, 11.2517, -11.458, -11.2517, -170.308, 96.5517, 1.54838, 10.9476, -1.54838, -10.9476, -211.276, 16.4751, -11.1483, 7.2984, 11.1483, -7.2984, -193.523, -22.9885, -4.64515, -5.1697, 4.64515, 5.1697, -157.043, -16.8582, -6.19353, -3.9533, 6.19353, 3.9533, -133.242, 37.1647, -10.2193, 8.21069, 10.2193, -8.21069, -85.8369, 39.6552, 2.16773, 18.5501, -2.16773, -18.5501, -62.0367, 4.98084, 14.2451, 19.1583, -14.2451, -19.1583, -75.8876, -35.249, 0, 23.7198, 0, -23.7198, -149.629, -92.7203, 0, 0, 0, 0, -127.975, -117.625, 0, 0, 0, 0, 29.4577, -115.709, -2.16773, -15.205, 2.16773, 15.205, 82.7156, -65.3257, 23.5354, -8.21069, -23.5354, 8.21069, 68.0843, -27.2031, 16.1032, -18.5501, -16.1032, 18.5501, -4.09677, -23.9464, -13.3161, -6.9943, 13.3161, 6.9943, 14.2411, 52.4904, 0, 0, 0, 0, 103.98, 44.4444, -7.43223, 22.1993, 7.43223, -22.1993, 136.559, 16.2835, 0, 0, 0, 0, 130.316, -86.0153, -51.716, -1.5205, 51.716, 1.5205, 164.651, -122.989, -1.23871, -12.4681, 1.23871, 12.4681, 216.738, -85.0575, 9.90964, -9.73119, -9.90964, 9.73119, 160.944, 81.0345, 0, 0, 0, 0, 86.032, 105.556, 0, 0, 0, 0, -80.1795, 107.854)
+}
+point_count = 24
 
 [sub_resource type="GDScript" id="GDScript_d233k"]
 script/source = "extends CharacterBody2D
 
-const UI_UP = -1
-const UI_DOWN = 1
-const NO_FORWARD = 0
+const UI_UP: int = -1;
+const UI_DOWN: int = 1;
+const NO_FORWARD: int = 0;
 
-var speed = 0.0
+var speed: float = 0.0;
 
-var negativeFeeback = false
+var negativeFeeback : bool = false;
 var UI;
 
-func _ready():
+func _ready() -> void:
 	pass
 
-func _physics_process(_delta):
+func _physics_process(_delta: float) -> void:
 	
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
-	var forward = Input.get_axis(\"ui_up\", \"ui_down\")
-	if (forward == UI_UP): speed += 3.0
-	if (forward == UI_DOWN): speed -= 1.5
-	var direction = Input.get_axis(\"ui_right\", \"ui_left\")
+	var forward: int = Input.get_axis(\"ui_up\", \"ui_down\") as int;
+	if (forward == UI_UP): speed += 3.0;
+	if (forward == UI_DOWN): speed -= 1.5;
+	var direction: int = Input.get_axis(\"ui_right\", \"ui_left\") as int;
 		
 	speed -= 0.5;
-	if (speed > 0): 
-		forward = UI_UP
-		rotation += direction * -(0.001 + (speed * 0.0002))
+	if (speed > 0):
+		forward = UI_UP;
+		rotation += direction * -(0.001 + (speed * 0.0002));
 	else: 
 		speed = 0;
 		forward = NO_FORWARD;
@@ -45,18 +53,17 @@ func _physics_process(_delta):
 #	print(\"Velocidad :\", speed)
 #	print(\"Direccion :\", direction)
 #	print(\"Relacion Velocidad/Giro :\", (0.001 + (speed * 0.0002)));
-	print(\"Posicion X coche: \",position.x)
-	print(\"Posicion Y coche: \",position.y)	
+	#print(\"Posicion X coche: \",position.x)
+	#print(\"Posicion Y coche: \",position.y)	
 	
-	move_and_slide()
+	move_and_slide();
 
-
-func _on_area_track_body_exited(_body):
-	position.x = 480
-	position.y = 301
-	rotation = 0
-	speed = 0
-	negativeFeeback = false
+func _on_area_track_body_exited(_body: Node2D) ->void:
+	position.x = 480;
+	position.y = 301;
+	rotation = 0;
+	speed = 0;
+	negativeFeeback = false;
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mq41w"]
@@ -78,6 +85,15 @@ input_pickable = false
 [node name="CollisionTrack" type="CollisionPolygon2D" parent="Circuit/areaTrack"]
 polygon = PackedVector2Array(-141.826, 81.226, -144.067, 80.71, -159.969, 74.3295, -180.258, 52.8736, -191.377, 20.1149, -185.915, 1.72413, -177.721, -1.91572, -169.333, 0.574703, -159.969, 25.6705, -152.556, 43.1034, -141.046, 54.7893, -127.585, 62.4521, -109.442, 66.6667, -79.9844, 62.2605, -68.6695, 54.5977, -58.3301, 43.6782, -49.9415, 30.0766, -43.6988, 7.8544, -47.4054, -19.7318, -58.9153, -40.8046, -80.7647, -58.2376, -117.245, -84.8659, -120.367, -94.4445, -116.27, -99.0422, -108.272, -100.192, -79.5942, -100.575, 24.5806, -101.149, 42.7234, -89.8467, 56.1842, -76.0536, 65.158, -61.6858, 62.0367, -52.1073, 41.7479, -46.3602, 13.6559, -44.8276, -12.4854, -40.8046, -25.9462, -24.9042, -28.0921, 2.10727, -16.192, 45.5939, -6.82794, 58.2375, 2.92625, 65.7088, 14.046, 71.0728, 30.238, 75.2873, 71.9859, 73.1801, 106.321, 65.5172, 135.973, 49.2337, 153.141, 27.7778, 159.969, -1.341, 158.408, -39.8467, 152.165, -74.5211, 149.044, -95.4023, 152.361, -100.766, 157.823, -100.575, 183.379, -86.3985, 194.889, -78.5441, 196.449, -71.6475, 195.864, -63.7931, 157.823, 47.1264, 141.631, 65.5172, 119.196, 76.8199, 97.3468, 83.5249, -123.878, 81.8008, -137.339, 81.9923, -143.972, 80.6513, -150.605, 122.031, -138.705, 122.797, 101.639, 122.414, 131.291, 121.839, 148.069, 117.05, 161.529, 111.111, 174.015, 102.874, 181.818, 93.6781, 195.279, 72.7969, 214.592, 11.3027, 233.515, -55.7471, 241.709, -90.4215, 236.442, -103.64, 223.956, -112.835, 160.944, -138.506, 147.288, -141.379, 130.901, -139.08, 117.636, -130.843, 111.393, -115.9, 113.539, -90.9962, 121.927, -13.6015, 118.221, 7.27969, 96.3714, 27.2031, 63.5973, 35.249, 34.92, 34.4827, 23.4101, 26.4368, 17.7526, 13.9847, 14.4362, -4.78928, 15.9969, -10.9195, 21.4592, -14.1763, 38.6266, -9.96169, 53.6481, -8.6207, 65.158, -9.57855, 79.2041, -12.069, 98.9075, -20.3065, 103.199, -56.705, 93.8353, -78.1609, 43.6988, -127.203, 24.9707, -132.375, -145.337, -131.801, -164.651, -121.073, -170.308, -105.172, -168.748, -81.6092, -103.199, -23.3717, -87.3976, -14.751, -83.3008, 1.72413, -89.5435, 18.0077, -96.5665, 23.3716, -105.15, 25.8621, -122.903, 21.0728, -132.462, 3.06512, -135.193, -16.6667, -143.777, -30.2682, -155.677, -39.8467, -189.036, -42.3372, -212.446, -30.0766, -225.517, -8.04599, -232.345, 25.6705, -226.102, 58.4291, -205.228, 92.7203, -181.818, 112.069, -158.213, 120.307, -150.8, 122.031, -145.337, 97.318)
 metadata/_edit_lock_ = true
+
+[node name="pathOK" type="Path2D" parent="Circuit"]
+position = Vector2(2.73117, 0.383141)
+curve = SubResource("Curve2D_qlo3h")
+
+[node name="Arrow" type="Sprite2D" parent="Circuit/pathOK"]
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("2_gayuo")
+script = ExtResource("3_u7kow")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 position = Vector2(480, 301)

@@ -15,6 +15,10 @@ run/main_scene="res://racing_game.tscn"
 config/features=PackedStringArray("4.0", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[editor]
+
+version_control/autoload_on_startup=true
+
 [layer_names]
 
 2d_physics/layer_1="collisionTrack"
