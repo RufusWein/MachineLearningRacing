@@ -25,7 +25,9 @@ var negativeFeeback : bool = false;
 var UI;
 
 func _ready() -> void:
-	pass
+	var arrow: Node2D = get_parent().get_node(\"Circuit/pathOK/Arrow\");
+	arrow.connect(\"cancel_racing\", self._cancel_racing);
+	
 
 func _physics_process(_delta: float) -> void:
 	
@@ -60,6 +62,9 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide();
 
 func _on_area_track_body_exited(_body: Node2D) ->void:
+	_cancel_racing();
+
+func _cancel_racing() -> void:
 	position.x = 480;
 	position.y = 301;
 	rotation = 0;

@@ -1,5 +1,7 @@
 extends Sprite2D
 
+signal cancel_racing;
+
 var cochito : CharacterBody2D;
 var earlySeconds : float;
 var redCross : Sprite2D;
@@ -22,8 +24,16 @@ func _ready() -> void:
 func _process(_delta : float) -> void:
 	var forwardPosition : Vector2;
 	var restTime: float = Time.get_unix_time_from_system() - earlySeconds;
-	
-	if (restTime > 0.10):
+
+	if (isCloserTo(self.global_position, cochito.global_position, 100)): 
+		i+= 1;
+		restTime +=1;
+
+	if (isCloserTo(cochito.global_position, redCross.global_position, 100)):
+		i = 0; 
+		emit_signal("cancel_racing");
+
+	if (restTime > 0.5):
 		var totalPoints : int = curve.get_baked_points().size();
 		earlySeconds = Time.get_unix_time_from_system();
 		i+=1;
@@ -35,14 +45,12 @@ func _process(_delta : float) -> void:
 			self.rotation_degrees = self.rotation_degrees + 180;			
 		else: 
 			forwardPosition = curve.get_baked_points()[0];		
-			self.rotation = self.position.angle_to_point(forwardPosition);
-		
-		if (i-positionBack<=0):
-			var posCross : int = (totalPoints - 1) - (positionBack-i) ;
-			redCross.position = curve.get_baked_points()[posCross];
-		else:
-			var posCross : int = i - positionBack;
-			redCross.position = curve.get_baked_points()[posCross];
-		
-		print("Pos. Cross (Vector2):", redCross.position );
+			self.rotation = self.position.angle_to_point(forwardPosition);		
+		var posCross : int = i - positionBack;
+		if (i-positionBack<=0): posCross = (totalPoints - 1) - (positionBack-i) ;
+		redCross.position = curve.get_baked_points()[posCross];
 	
+func isCloserTo(posSource: Vector2, posTarget: Vector2, distMin: int) -> bool:
+	var distBetweenPoints : int = posSource.distance_to(posTarget) as int;
+	return distBetweenPoints < distMin;	
+
