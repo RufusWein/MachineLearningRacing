@@ -1,76 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://cxkqw52hjdk3p"]
+[gd_scene load_steps=12 format=3 uid="uid://hkkryt2svubb"]
 
 [ext_resource type="Texture2D" uid="uid://ga0frdq4bv41" path="res://graphics/circuit.jpg" id="1_l4bis"]
 [ext_resource type="Texture2D" uid="uid://d0k1kcml5a8he" path="res://graphics/arrow.png" id="2_72pmd"]
 [ext_resource type="Script" path="res://scripts/arrowScript.gd" id="3_oqybc"]
 [ext_resource type="Texture2D" uid="uid://c4cly3esc3xs4" path="res://graphics/car.png" id="4_4rpvi"]
 [ext_resource type="Texture2D" uid="uid://dp14xdorhciss" path="res://graphics/wayWrong.png" id="4_531cr"]
+[ext_resource type="Script" path="res://scripts/driverCarScript.gd" id="5_h2ban"]
+[ext_resource type="Script" path="res://scripts/captureImage.gd" id="7_asbm5"]
+[ext_resource type="Script" path="res://scripts/launchRacingScipt.gd" id="8_0rus8"]
+[ext_resource type="Script" path="res://scripts/launchTrainingScript.gd" id="9_pq3sm"]
 
 [sub_resource type="Curve2D" id="Curve2D_qlo3h"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, -80.1795, 107.854, 11.458, 11.2517, -11.458, -11.2517, -170.308, 96.5517, 1.54838, 10.9476, -1.54838, -10.9476, -211.276, 16.4751, -11.1483, 7.2984, 11.1483, -7.2984, -193.523, -22.9885, -4.64515, -5.1697, 4.64515, 5.1697, -157.043, -16.8582, -6.19353, -3.9533, 6.19353, 3.9533, -133.242, 37.1647, -10.2193, 8.21069, 10.2193, -8.21069, -85.8369, 39.6552, 2.16773, 18.5501, -2.16773, -18.5501, -62.0367, 4.98084, 14.2451, 19.1583, -14.2451, -19.1583, -75.8876, -35.249, 0, 23.7198, 0, -23.7198, -149.629, -92.7203, 0, 0, 0, 0, -127.975, -117.625, 0, 0, 0, 0, 29.4577, -115.709, -2.16773, -15.205, 2.16773, 15.205, 82.7156, -65.3257, 23.5354, -8.21069, -23.5354, 8.21069, 68.0843, -27.2031, 16.1032, -18.5501, -16.1032, 18.5501, -4.09677, -23.9464, -13.3161, -6.9943, 13.3161, 6.9943, 14.2411, 52.4904, 0, 0, 0, 0, 103.98, 44.4444, -7.43223, 22.1993, 7.43223, -22.1993, 136.559, 16.2835, 0, 0, 0, 0, 130.316, -86.0153, -51.716, -1.5205, 51.716, 1.5205, 164.651, -122.989, -1.23871, -12.4681, 1.23871, 12.4681, 216.738, -85.0575, 9.90964, -9.73119, -9.90964, 9.73119, 160.944, 81.0345, 0, 0, 0, 0, 86.032, 105.556, 0, 0, 0, 0, -80.1795, 107.854)
 }
 point_count = 24
-
-[sub_resource type="GDScript" id="GDScript_d233k"]
-script/source = "extends CharacterBody2D
-
-const UI_UP: int = -1;
-const UI_DOWN: int = 1;
-const NO_FORWARD: int = 0;
-
-var speed: float = 0.0;
-
-var negativeFeeback : bool = false;
-var UI;
-
-func _ready() -> void:
-	var arrow: Node2D = get_parent().get_node(\"Circuit/pathOK/Arrow\");
-	arrow.connect(\"cancel_racing\", self._cancel_racing);
-	
-
-func _physics_process(_delta: float) -> void:
-	
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var forward: int = Input.get_axis(\"ui_up\", \"ui_down\") as int;
-	if (forward == UI_UP): speed += 3.0;
-	if (forward == UI_DOWN): speed -= 1.5;
-	var direction: int = Input.get_axis(\"ui_right\", \"ui_left\") as int;
-		
-	speed -= 0.5;
-	if (speed > 0):
-		forward = UI_UP;
-		rotation += direction * -(0.001 + (speed * 0.0002));
-	else: 
-		speed = 0;
-		forward = NO_FORWARD;
-
-	if (speed > 200): speed = 200;
-
-	velocity.x = cos(rotation) * speed * -1
-	velocity.y = sin(rotation) * speed * -1
-	
-#	print(\"En la pista: \", !negativeFeeback );
-#	print(\"Rotacion :\", rotation)
-#	print(\"Velocidad :\", speed)
-#	print(\"Direccion :\", direction)
-#	print(\"Relacion Velocidad/Giro :\", (0.001 + (speed * 0.0002)));
-	#print(\"Posicion X coche: \",position.x)
-	#print(\"Posicion Y coche: \",position.y)	
-	
-	move_and_slide();
-
-func _on_area_track_body_exited(_body: Node2D) ->void:
-	_cancel_racing();
-
-func _cancel_racing() -> void:
-	position.x = 480;
-	position.y = 301;
-	rotation = 0;
-	speed = 0;
-	negativeFeeback = false;
-"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mq41w"]
 size = Vector2(11.1198, 4.98082)
@@ -108,7 +52,7 @@ texture = ExtResource("4_531cr")
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 position = Vector2(480, 301)
 scale = Vector2(0.178651, 0.22072)
-script = SubResource("GDScript_d233k")
+script = ExtResource("5_h2ban")
 
 [node name="Cochito" type="Sprite2D" parent="CharacterBody2D"]
 position = Vector2(123.145, -0.000244141)
@@ -128,7 +72,7 @@ metadata/_edit_lock_ = true
 position = Vector2(117.547, -0.000488281)
 rotation = 3.14159
 scale = Vector2(28.6928, 23.6498)
-metadata/_edit_lock_ = true
+script = ExtResource("7_asbm5")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -138,8 +82,10 @@ offset_top = 25.0
 offset_right = 1131.0
 offset_bottom = 56.0
 theme_override_font_sizes/font_size = 0
+toggle_mode = true
 text = "Mejor vuelta"
 icon_alignment = 1
+script = ExtResource("8_0rus8")
 
 [node name="Training" type="Button" parent="CanvasLayer"]
 offset_left = 1025.0
@@ -147,9 +93,11 @@ offset_top = 75.0
 offset_right = 1131.0
 offset_bottom = 106.0
 theme_override_font_sizes/font_size = 0
+toggle_mode = true
 text = "Training
 "
 icon_alignment = 1
+script = ExtResource("9_pq3sm")
 
 [node name="Label" type="Label" parent="CanvasLayer"]
 offset_left = 25.0
@@ -166,5 +114,13 @@ offset_right = 158.0
 offset_bottom = 101.0
 text = "Reintentos: 0"
 vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="CanvasLayer"]
+offset_left = 875.0
+offset_top = 406.0
+offset_right = 915.0
+offset_bottom = 446.0
+scale = Vector2(6, 5.32)
+mouse_force_pass_scroll_events = false
 
 [connection signal="body_exited" from="Circuit/areaTrack" to="CharacterBody2D" method="_on_area_track_body_exited"]
