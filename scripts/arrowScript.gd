@@ -42,10 +42,10 @@ func _process(_delta : float) -> void:
 		if (i+1<totalPoints): 
 			forwardPosition = curve.get_baked_points()[i+1];
 			self.rotation = self.position.angle_to_point(forwardPosition);
-			self.rotation_degrees = self.rotation_degrees + 180;			
+			self.rotation_degrees = self.rotation_degrees + 180;
 		else: 
-			forwardPosition = curve.get_baked_points()[0];		
-			self.rotation = self.position.angle_to_point(forwardPosition);		
+			forwardPosition = curve.get_baked_points()[0];
+			self.rotation = self.position.angle_to_point(forwardPosition);
 		var posCross : int = i - positionBack;
 		if (i-positionBack<=0): posCross = (totalPoints - 1) - (positionBack-i) ;
 		redCross.position = curve.get_baked_points()[posCross];
