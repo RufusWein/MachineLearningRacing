@@ -1,7 +1,4 @@
 shader_type canvas_item;
-//render_mode unshaded, blend_disabled;
-
-uniform float speed = 1.0;
 
 uniform float _radians = 0.0;
 
@@ -16,6 +13,5 @@ vec2 rotateUV(vec2 uv, vec2 pivot, float rotation) {
 }
 
 void vertex() {
-    //VERTEX = rotateUV(VERTEX, 0.5/TEXTURE_PIXEL_SIZE, TIME * speed);
     VERTEX = rotateUV(VERTEX, 0.5/TEXTURE_PIXEL_SIZE, _radians );
 }
